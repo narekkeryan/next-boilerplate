@@ -1,0 +1,8 @@
+# project files
+.idea
+
+# build output
+.next
+
+# dependencies
+node_modules/

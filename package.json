@@ -1,0 +1,36 @@
+{
+  "name": "next-boilerplate",
+  "version": "1.0.0",
+  "description": "Next.js Application Boilerplate",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [
+    "next",
+    "nextjs",
+    "react",
+    "boilerplate",
+    "server-rendering"
+  ],
+  "author": "Narek Keryan <narek.keryan@gmail.com> (http://nkgdev.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narekkeryan/next-boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/narekkeryan/next-boilerplate/issues"
+  },
+  "homepage": "https://github.com/narekkeryan/next-boilerplate#readme",
+  "dependencies": {
+    "@zeit/next-sass": "^0.2.0",
+    "bootstrap": "^4.1.1",
+    "next": "^6.0.3",
+    "node-sass": "^4.9.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "reactstrap": "^6.1.0"
+  }
+}
