@@ -26,6 +26,7 @@
   "homepage": "https://github.com/narekkeryan/next-boilerplate#readme",
   "dependencies": {
     "@zeit/next-sass": "^0.2.0",
+    "availity-reactstrap-validation": "^2.0.2",
     "bootstrap": "^4.1.1",
     "next": "^6.0.3",
     "node-sass": "^4.9.0",
