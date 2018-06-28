@@ -1,31 +1,21 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Layout from '../../components/layout';
 import AuthService from '../../utils/AuthService';
+import ErrorMessages from '../../constants/ErrorMessages';
 
 class Register extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { username: '', email: '', password: '', errors: {} };
+        this.state = { username: '', email: '', password: '', rePassword: '', errors: {} };
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleRePasswordChange = this.handleRePasswordChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    getError(property) {
-        if (property in this.state.errors) {
-            return this.state.errors[property]['msg'];
-        }
-    }
-
-    hasError(property) {
-        if (property in this.state.errors) {
-            return { invalid: true };
-        }
     }
 
     handleUsernameChange(e) {
@@ -40,14 +30,17 @@ class Register extends Component {
         this.setState({ password: e.target.value });
     }
 
+    handleRePasswordChange(e) {
+        this.setState({ rePassword: e.target.value });
+    }
+
     async handleSubmit() {
-        const data = (({ username, email, password }) => ({ username, email, password }))(this.state);
+        const data = (({ username, email, password, rePassword }) => ({ username, email, password, rePassword }))(this.state);
 
         const result = await AuthService.register(data) || {};
 
         if (result === true) {
-            // todo do something
-            console.log('registered, redirect');
+            // TODO: Redirect or Something Like That
         } else {
             this.setState({ errors: result });
         }
@@ -56,22 +49,24 @@ class Register extends Component {
     render() {
         const validationRules = {
             username: {
-                required: { errorMessage: 'Username is required' },
-                pattern: { value: '^[A-Za-z0-9._]+$', errorMessage: 'Your username must be composed only with letter, numbers, dot and underscore' },
-                minLength: { value: 4, errorMessage: 'Your username must be between 6 and 16 characters' },
-                maxLength: { value: 32, errorMessage: 'Your username must be between 6 and 16 characters' }
+                required: { errorMessage: ErrorMessages['err.username.required'] },
+                pattern: { value: '^[A-Za-z0-9._]+$', errorMessage: ErrorMessages['err.username.pattern'] },
+                minLength: { value: 4, errorMessage: ErrorMessages['err.username.length.from.4.to.32'] },
+                maxLength: { value: 32, errorMessage: ErrorMessages['err.username.length.from.4.to.32'] },
+                async: AuthService.isUnique
             },
             email: {
-                required: { errorMessage: 'Email is required' },
-                email: { value: true, errorMessage: 'Your email is not valid' }
+                required: { errorMessage: ErrorMessages['err.email.required'] },
+                email: { value: true, errorMessage: ErrorMessages['err.email.invalid'] },
+                async: AuthService.isUnique
             },
             password: {
-                required: { errorMessage: 'Password is required' },
-                minLength: { value: 6, errorMessage: 'Your password must be at least 6 characters length' }
+                required: { errorMessage: ErrorMessages['err.password.required'] },
+                minLength: { value: 6, errorMessage: ErrorMessages['err.password.length.from.6'] }
             },
             rePassword: {
-                required: { errorMessage: 'Confirm Password is required' },
-                match: { value: 'password', errorMessage: 'Confirm Password must match Password' }
+                required: { errorMessage: ErrorMessages['err.rePassword.required'] },
+                match: { value: 'password', errorMessage: ErrorMessages['err.rePassword.match'] }
             }
         };
 
@@ -79,7 +74,14 @@ class Register extends Component {
             <Layout title="Register Page">
                 <h1>Register Page</h1>
                 <p>Open <code>/pages/users/register.js</code> to edit this file.</p>
-                <AvForm onSubmit={this.handleSubmit}>
+                { !!Object.keys(this.state.errors).length && (
+                    <div>
+                        { Object.keys(this.state.errors).map(key => {
+                            return <Alert color="danger">{ErrorMessages[this.state.errors[key]['msg']]}</Alert>
+                        }) }
+                    </div>
+                ) }
+                <AvForm onValidSubmit={this.handleSubmit}>
                     <AvGroup>
                         <AvField type="text" name="username" id="username" placeholder="Username" validate={validationRules.username} onChange={this.handleUsernameChange} />
                     </AvGroup>
@@ -90,7 +92,7 @@ class Register extends Component {
                         <AvField type="password" name="password" id="password" placeholder="Password" validate={validationRules.password} onChange={this.handlePasswordChange} />
                     </AvGroup>
                     <AvGroup>
-                        <AvField type="password" name="rePassword" id="rePassword" placeholder="Confirm Password" validate={validationRules.rePassword} />
+                        <AvField type="password" name="rePassword" id="rePassword" placeholder="Confirm Password" validate={validationRules.rePassword} onChange={this.handleRePasswordChange} />
                     </AvGroup>
                     <Button color="primary" type="submit">Register</Button>
                 </AvForm>
