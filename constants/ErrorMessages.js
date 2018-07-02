@@ -12,5 +12,6 @@ module.exports = {
     'err.password.length.from.6': 'Password must be at least 6 characters in length.',
     'err.rePassword.required': 'Confirm Password is required',
     'err.rePassword.match': 'Confirm Password must match Password',
-    'err.invalid.credentials': 'Username or password is incorrect.'
+    'err.invalid.credentials': 'Username or password is incorrect.',
+    'err.connection.refused': 'Could not connect to server.'
 };

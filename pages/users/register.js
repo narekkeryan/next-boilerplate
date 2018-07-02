@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
-import { Alert, Button } from 'reactstrap';
+import Router from 'next/router';
+import { Alert, Button, Modal, ModalBody } from 'reactstrap';
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Layout from '../../components/layout';
 import AuthService from '../../utils/AuthService';
 import ErrorMessages from '../../constants/ErrorMessages';
+import Messages from '../../constants/Messages';
 
 class Register extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { username: '', email: '', password: '', rePassword: '', errors: {} };
+        this.state = { username: '', email: '', password: '', rePassword: '', errors: {}, warning: '', modal: false };
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRePasswordChange = this.handleRePasswordChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
 
     handleUsernameChange(e) {
@@ -37,13 +40,20 @@ class Register extends Component {
     async handleSubmit() {
         const data = (({ username, email, password, rePassword }) => ({ username, email, password, rePassword }))(this.state);
 
-        const result = await AuthService.register(data) || {};
+        const result = await AuthService.register(data);
 
         if (result === true) {
-            // TODO: Redirect or Something Like That
+            this.setState({ modal: !this.state.modal });
+            setTimeout(() => Router.replace('/'), 5000);
+        } else if (result === false) {
+            this.setState({ warning: ErrorMessages['err.connection.refused'] });
         } else {
             this.setState({ errors: result });
         }
+    }
+
+    toggle() {
+        this.setState({ modal: !this.state.modal });
     }
 
     render() {
@@ -81,6 +91,7 @@ class Register extends Component {
                         }) }
                     </div>
                 ) }
+                { !!this.state.warning.length && <Alert color="warning">{this.state.warning}</Alert> }
                 <AvForm onValidSubmit={this.handleSubmit}>
                     <AvGroup>
                         <AvField type="text" name="username" id="username" placeholder="Username" validate={validationRules.username} onChange={this.handleUsernameChange} />
@@ -96,6 +107,9 @@ class Register extends Component {
                     </AvGroup>
                     <Button color="primary" type="submit">Register</Button>
                 </AvForm>
+                <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop="false">
+                    <ModalBody dangerouslySetInnerHTML={{__html: Messages['successfully.registered']}} />
+                </Modal>
             </Layout>
         );
     }

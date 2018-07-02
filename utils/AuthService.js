@@ -37,7 +37,7 @@ class AuthService {
                 }
                 return true;
             })
-            .catch(error => console.error(error));
+            .catch(error => false);
     }
 
     static isUnique(value, ctx, input, cb) {
