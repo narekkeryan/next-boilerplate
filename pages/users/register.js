@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { Alert, Button, Modal, ModalBody } from 'reactstrap';
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Layout from '../../components/layout';
+import withoutAuth from '../../utils/withoutAuth';
 import AuthService from '../../utils/AuthService';
 import ErrorMessages from '../../constants/ErrorMessages';
 import Messages from '../../constants/Messages';
@@ -39,7 +40,6 @@ class Register extends Component {
 
     async handleSubmit() {
         const data = (({ username, email, password, rePassword }) => ({ username, email, password, rePassword }))(this.state);
-
         const result = await AuthService.register(data);
 
         if (result === true) {
@@ -115,4 +115,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default withoutAuth(Register);

@@ -4,20 +4,26 @@ import ServerRoutes from '../constants/ServerRoutes';
 import ErrorMessages from '../constants/ErrorMessages';
 
 class AuthService {
-    static login() {
-        const options = { // todo change options
+    static login(data) {
+        const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'app'
-            }
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         };
 
         return fetch(ServerRoutes.LOGIN_URL, options)
             .then(response => response.json())
             .then(responseJson => {
-
+                if ('user' in responseJson && 'token' in responseJson) {
+                    AuthService.set('user', responseJson.user);
+                    AuthService.set('token', responseJson.token);
+                    return true;
+                }
+                return responseJson.message;
             })
-            .catch(error => console.error(error));
+            .catch(error => false);
     }
 
     static register(data) {
@@ -38,6 +44,11 @@ class AuthService {
                 return true;
             })
             .catch(error => false);
+    }
+
+    static logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
     }
 
     static isUnique(value, ctx, input, cb) {
@@ -61,6 +72,33 @@ class AuthService {
                 console.error(error);
                 cb(true);
             });
+    }
+
+    static isLoggedIn() {
+        const token = AuthService.get('token');
+        if (!!Object.keys(token).length) {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token.access}`
+                }
+            };
+
+            return fetch(ServerRoutes.IS_LOGGED_IN_URL, options)
+                .then(response => response.json())
+                .then(responseJson => responseJson.auth)
+                .catch(error => console.log(error));
+        }
+        return false;
+    }
+
+    static set(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    static get(key) {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item): {};
     }
 }
 
