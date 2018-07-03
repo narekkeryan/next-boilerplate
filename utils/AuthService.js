@@ -1,5 +1,4 @@
-'use strict';
-
+import Router from 'next/router';
 import ServerRoutes from '../constants/ServerRoutes';
 import ErrorMessages from '../constants/ErrorMessages';
 
@@ -49,6 +48,7 @@ class AuthService {
     static logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        Router.replace('/');
     }
 
     static isUnique(value, ctx, input, cb) {

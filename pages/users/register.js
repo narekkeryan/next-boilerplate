@@ -91,7 +91,7 @@ class Register extends Component {
                         }) }
                     </div>
                 ) }
-                { !!this.state.warning.length && <Alert color="warning">{this.state.warning}</Alert> }
+                { !!this.state.warning && <Alert color="warning">{this.state.warning}</Alert> }
                 <AvForm onValidSubmit={this.handleSubmit}>
                     <AvGroup>
                         <AvField type="text" name="username" id="username" placeholder="Username" validate={validationRules.username} onChange={this.handleUsernameChange} />

@@ -45,8 +45,8 @@ class Login extends Component {
             <Layout title="Login Page">
                 <h1>Login Page</h1>
                 <p>Open <code>/pages/users/login.js</code> to edit this file.</p>
-                { !!this.state.error.length && <Alert color="danger">{this.state.error}</Alert> }
-                { !!this.state.warning.length && <Alert color="warning">{this.state.warning}</Alert> }
+                { !!this.state.error && <Alert color="danger">{this.state.error}</Alert> }
+                { !!this.state.warning && <Alert color="warning">{this.state.warning}</Alert> }
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Input type="text" name="username" id="username" placeholder="Username" onChange={this.handleUsernameChange} />
