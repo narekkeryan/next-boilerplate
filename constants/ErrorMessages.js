@@ -13,5 +13,6 @@ module.exports = {
     'err.rePassword.required': 'Confirm Password is required',
     'err.rePassword.match': 'Confirm Password must match Password',
     'err.invalid.credentials': 'Username or password is incorrect.',
+    'err.disabled': 'You need to activate your account.',
     'err.connection.refused': 'Could not connect to server.'
 };
