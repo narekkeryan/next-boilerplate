@@ -86,7 +86,7 @@ class AuthService {
 
             return fetch(ServerRoutes.IS_LOGGED_IN_URL, options)
                 .then(response => response.json())
-                .then(responseJson => responseJson.auth)
+                .then(responseJson => responseJson)
                 .catch(error => console.log(error));
         }
         return false;
